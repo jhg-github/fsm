@@ -3,26 +3,30 @@
 
 #include "fsm.h"
 
-typedef struct Led Led;
-struct Led {
-    Fsm super_; /* extend the Fsm class */
+
+/* Types ---------------------------------------------------------------------*/
+typedef struct fsm_LedFsm fsm_LedFsm;
+struct fsm_LedFsm {
+    fsm_Fsm base; /* extend the Fsm class */
 /* ... other attributes of Led */
 };
 
-void LedCtor(Led *me);
-void Led_initial(Led *me, Event const *e);
-void Led_on(Led *me, Event const *e);
-void Led_off(Led *me, Event const *e);
-
-typedef struct LedEvt LedEvt;
-struct LedEvt {
-    Event super_; /* extend the Event class */
+typedef struct fsm_LedEvt fsm_LedEvt;
+struct fsm_LedEvt {
+    fsm_Event base; /* extend the Event class */
 /* ... other attributes of LedEvt */
 };
 
 /* signals used by the Led FSM */
 enum {
-    TURN_ON_SIG, TURN_OFF_SIG,
+    fsm_led_TURN_ON_SIG,
+		fsm_led_TURN_OFF_SIG,
 };
+
+/* Public Functions ----------------------------------------------------------*/
+void LedCtor(fsm_LedFsm *me);
+
+
+
 
 #endif // #ifndef __FSM_LED_H

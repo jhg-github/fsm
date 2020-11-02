@@ -1,29 +1,34 @@
 #ifndef __FSM_H
 #define __FSM_H
 
-typedef short Signal;
-typedef struct Event Event;
-typedef struct Fsm Fsm;
-typedef void (*State)(Fsm*, Event const*);
+
+/* Types ---------------------------------------------------------------------*/
+typedef short fsm_Signal;
+typedef struct fsm_Event fsm_Event;
+typedef struct fsm_Fsm fsm_Fsm;
+typedef void (*fsm_State)(fsm_Fsm*, fsm_Event const*);
 
 /* Event base class */
-struct Event {
-    Signal sig;
+struct fsm_Event {
+    fsm_Signal sig;
 };
 
 /* Finite State Machine base class */
-struct Fsm {
-    State state__; /* the current state */
+struct fsm_Fsm {
+    fsm_State state; /* the current state */
 };
+
+
+/* Public Functions ----------------------------------------------------------*/
 
 /* "inlined" methods of Fsm class */
 //#define FsmCtor_(me_, init_) ((me_)->state__ = (State)(init_))
 //#define FsmInit(me_, e_)     (*(me_)->state__)((me_), (e_))
 //#define FsmDispatch(me_, e_) (*(me_)->state__)((me_), (e_))
 //#define FsmTran_(me_, targ_) ((me_)->state__ = (State)(targ_))
-void FsmCtor_(Fsm *me, State init);
-void FsmInit(Fsm *me, Event const *e);
-void FsmDispatch(Fsm *me, Event const *e);
-void FsmTran_(Fsm *me, State target);
+void fsm_FsmCtor(fsm_Fsm *me, fsm_State init);
+void fsm_FsmInit(fsm_Fsm *me, fsm_Event const *e);
+void fsm_FsmDispatch(fsm_Fsm *me, fsm_Event const *e);
+void fsm_FsmTransition(fsm_Fsm *me, fsm_State target);
 
 #endif // #ifndef __FSM_H

@@ -1,40 +1,55 @@
 #include "fsm_led.h"
 #include "main.h"
 
-void SetLedOn(void) {
+
+/* Function Prototypes -------------------------------------------------------*/
+static void Led_initial(fsm_LedFsm *me, fsm_Event const *e);
+static void Led_on(fsm_LedFsm *me, fsm_Event const *e);
+static void Led_off(fsm_LedFsm *me, fsm_Event const *e);
+static void SetLedOn(void);
+static void SetLedOff(void);
+
+
+/* Public Functions ----------------------------------------------------------*/
+void LedCtor(fsm_LedFsm *me) {
+//    FsmCtor_(&me->super_, &Led_initial);
+    fsm_FsmCtor(&me->base, (fsm_State) Led_initial);
+}
+
+
+/* Private Functions ---------------------------------------------------------*/
+
+static void SetLedOn(void) {
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
 }
-void SetLedOff(void) {
+static void SetLedOff(void) {
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 }
 
-void LedCtor(Led *me) {
-//    FsmCtor_(&me->super_, &Led_initial);
-    FsmCtor_(&me->super_, (State) Led_initial);
-}
 
-void Led_initial(Led *me, Event const *e) {
+
+static void Led_initial(fsm_LedFsm *me, fsm_Event const *e) {
     SetLedOn();
 //    FsmTran_((Fsm *)me, &Led_on);
-    FsmTran_((Fsm*) me, (State) Led_on);
+    fsm_FsmTransition((fsm_Fsm*) me, (fsm_State) Led_on);
 }
 
-void Led_on(Led *me, Event const *e) {
+static void Led_on(fsm_LedFsm *me, fsm_Event const *e) {
     switch (e->sig) {
-    case TURN_OFF_SIG:
+    case fsm_led_TURN_OFF_SIG:
         SetLedOff();
 //        FsmTran_((Fsm *)me, &Led_off);
-        FsmTran_((Fsm*) me, (State) Led_off);
+        fsm_FsmTransition((fsm_Fsm*) me, (fsm_State) Led_off);
         break;
     }
 }
 
-void Led_off(Led *me, Event const *e) {
+static void Led_off(fsm_LedFsm *me, fsm_Event const *e) {
     switch (e->sig) {
-    case TURN_ON_SIG:
+    case fsm_led_TURN_ON_SIG:
         SetLedOn();
 //        FsmTran_((Fsm *)me, &Led_on);
-        FsmTran_((Fsm*) me, (State) Led_on);
+        fsm_FsmTransition((fsm_Fsm*) me, (fsm_State) Led_on);
         break;
     }
 }
