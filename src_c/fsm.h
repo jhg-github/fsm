@@ -1,0 +1,28 @@
+#ifndef __FSM_H
+#define __FSM_H
+
+
+/* Types ---------------------------------------------------------------------*/
+typedef short fsm_Signal;
+typedef struct fsm_Event fsm_Event;
+typedef struct fsm_Fsm fsm_Fsm;
+typedef void (*fsm_State)(fsm_Fsm*, fsm_Event const*);
+
+/* Event base class */
+struct fsm_Event {
+    fsm_Signal signal;
+};
+
+/* Finite State Machine base class */
+struct fsm_Fsm {
+    fsm_State state; /* the current state */
+};
+
+
+/* Public Functions ----------------------------------------------------------*/
+void fsm_Ctor(fsm_Fsm *me, fsm_State init);
+void fsm_Init(fsm_Fsm *me, fsm_Event const *e);
+void fsm_Dispatch(fsm_Fsm *me, fsm_Event const *e);
+void fsm_Transition(fsm_Fsm *me, fsm_State target);
+
+#endif // #ifndef __FSM_H
