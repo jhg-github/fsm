@@ -3,17 +3,17 @@
 
 
 /* Function Prototypes -------------------------------------------------------*/
-static void Led_initial(fsm_LedFsm *me, fsm_Event const *e);
-static void Led_on(fsm_LedFsm *me, fsm_Event const *e);
-static void Led_off(fsm_LedFsm *me, fsm_Event const *e);
+static void Led_initial(fsmLed_Fsm *me, fsm_Event const *e);
+static void Led_on(fsmLed_Fsm *me, fsm_Event const *e);
+static void Led_off(fsmLed_Fsm *me, fsm_Event const *e);
 static void SetLedOn(void);
 static void SetLedOff(void);
 
 
 /* Public Functions ----------------------------------------------------------*/
-void LedCtor(fsm_LedFsm *me) {
+void LedCtor(fsmLed_Fsm *me) {
 //    FsmCtor_(&me->super_, &Led_initial);
-    fsm_FsmCtor(&me->base, (fsm_State) Led_initial);
+    fsm_Ctor(&me->base, (fsm_State) Led_initial);
 }
 
 
@@ -27,29 +27,27 @@ static void SetLedOff(void) {
 }
 
 
+/* States Functions ----------------------------------------------------------*/
 
-static void Led_initial(fsm_LedFsm *me, fsm_Event const *e) {
+static void Led_initial(fsmLed_Fsm *me, fsm_Event const *e) {
     SetLedOn();
-//    FsmTran_((Fsm *)me, &Led_on);
-    fsm_FsmTransition((fsm_Fsm*) me, (fsm_State) Led_on);
+    fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_on);
 }
 
-static void Led_on(fsm_LedFsm *me, fsm_Event const *e) {
-    switch (e->sig) {
-    case fsm_led_TURN_OFF_SIG:
+static void Led_on(fsmLed_Fsm *me, fsm_Event const *e) {
+    switch (e->signal) {
+    case fsmLed_TURN_OFF_SIG:
         SetLedOff();
-//        FsmTran_((Fsm *)me, &Led_off);
-        fsm_FsmTransition((fsm_Fsm*) me, (fsm_State) Led_off);
+        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_off);
         break;
     }
 }
 
-static void Led_off(fsm_LedFsm *me, fsm_Event const *e) {
-    switch (e->sig) {
-    case fsm_led_TURN_ON_SIG:
+static void Led_off(fsmLed_Fsm *me, fsm_Event const *e) {
+    switch (e->signal) {
+    case fsmLed_TURN_ON_SIG:
         SetLedOn();
-//        FsmTran_((Fsm *)me, &Led_on);
-        fsm_FsmTransition((fsm_Fsm*) me, (fsm_State) Led_on);
+        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_on);
         break;
     }
 }
