@@ -1,5 +1,7 @@
 #include "fsm.h"
 
+// just a comment added to test git gui
+
 /* "inlined" methods of Fsm class */
 //#define FsmCtor_(me_, init_) ((me_)->state__ = (State)(init_))
 //#define FsmInit(me_, e_)     (*(me_)->state__)((me_), (e_))
