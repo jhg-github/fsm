@@ -2,13 +2,14 @@
 #define __FSM_LED_H
 
 #include "fsm.h"
+#include "fsm_event_buffer.h"
 
 
 /* Types ---------------------------------------------------------------------*/
 typedef struct fsmLed_Fsm fsmLed_Fsm;
 struct fsmLed_Fsm {
     fsm_Fsm base; /* extend the Fsm class */
-/* ... other attributes of Led */
+    fsm_event_buf_handle_t evt_buf;
 };
 
 typedef struct fsmLed_Event fsmLed_Event;
@@ -20,7 +21,7 @@ struct fsmLed_Event {
 /* signals used by the Led FSM */
 enum {
     fsmLed_TURN_ON_SIG,
-		fsmLed_TURN_OFF_SIG,
+	fsmLed_TURN_OFF_SIG,
 };
 
 /* Public Functions ----------------------------------------------------------*/

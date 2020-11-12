@@ -1,6 +1,10 @@
+/* Includes ------------------------------------------------------------------*/
 #include "fsm_test.h"
 #include "fsm_led.h"
 #include "main.h"
+#include "assert.h"
+#include "static_allocator.h"
+
 
 /**
  * Call this from main
