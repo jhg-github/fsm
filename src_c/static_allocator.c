@@ -17,7 +17,7 @@ static uint32_t salloc_free_index = 0;
 
 /* Public Functions ----------------------------------------------------------*/
 
-void * salloc(uint32_t size_bytes){
+void * salloc_4bytes(uint32_t size_bytes){
     void *next_free;
     uint32_t n_blocks;
 		if( size_bytes % 4 == 0){	// to make it aligned to 4 bytes Cortex-M

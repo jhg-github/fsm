@@ -1,5 +1,6 @@
 #include "fsm_led.h"
 #include "main.h"
+#include "static_allocator.h"
 
 
 /* Constants -----------------------------------------------------------------*/
@@ -15,10 +16,10 @@ static void SetLedOff(void);
 
 
 /* Public Functions ----------------------------------------------------------*/
-void LedCtor(fsmLed_Fsm *me) {
-//    FsmCtor_(&me->super_, &Led_initial);
-    fsm_Ctor(&me->base, (fsm_State) Led_initial);
-    me->evt_buf = fsm_event_buffer_Constructor(FSM_LED_EVENT_BUFFER_SIZE, sizeof(fsmLed_Event));
+fsmLed_Fsm * LedCtor( void ) {
+	fsmLed_Fsm * me = salloc_4bytes(sizeof(fsmLed_Fsm));
+  fsm_Ctor(&me->base, (fsm_State) Led_initial);
+	return me;
 }
 
 

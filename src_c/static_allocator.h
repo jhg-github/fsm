@@ -8,7 +8,7 @@
 
 /* Public Functions ----------------------------------------------------------*/
 
-void * salloc(uint32_t size_bytes);
+void * salloc_4bytes(uint32_t size_bytes);
 void salloc_disable(void);
 
 #endif // #ifndef __STATIC_ALLOCATOR_H
