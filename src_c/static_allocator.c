@@ -5,7 +5,7 @@
 
 
 /* Constants -----------------------------------------------------------------*/
-#define SALLOC_N_BLOCKS 		(2)	// a block it is a uint32_t to avoid alignment problems
+#define SALLOC_N_BLOCKS 		(40)	// a block is a uint32_t to avoid alignment problems
 #define SALLOC_BLOCK_SIZE		(4)
 
 

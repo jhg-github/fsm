@@ -16,9 +16,15 @@ static void SetLedOff(void);
 
 
 /* Public Functions ----------------------------------------------------------*/
-void LedCtor( fsmLed_Fsm * me) {
+void LedCtor( fsmLed_Fsm * me, uint32_t evt_buf_n_elem){
 	fsm_Ctor(&me->base, (fsm_State) Led_initial);
+	me->evt_queue = queue_Constructor(evt_buf_n_elem, sizeof(fsmLed_Event));
 }
+
+void Led_SendEvent( fsmLed_Fsm * me, fsm_Event * evt ){
+	queue_Enqueue( me->evt_queue, evt );
+}
+
 
 
 /* States Functions ----------------------------------------------------------*/
