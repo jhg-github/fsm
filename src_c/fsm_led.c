@@ -16,10 +16,8 @@ static void SetLedOff(void);
 
 
 /* Public Functions ----------------------------------------------------------*/
-fsmLed_Fsm * LedCtor( void ) {
-	fsmLed_Fsm * me = salloc_4bytes(sizeof(fsmLed_Fsm));
-  fsm_Ctor(&me->base, (fsm_State) Led_initial);
-	return me;
+void LedCtor( fsmLed_Fsm * me) {
+	fsm_Ctor(&me->base, (fsm_State) Led_initial);
 }
 
 

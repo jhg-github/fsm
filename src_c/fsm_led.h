@@ -22,9 +22,9 @@ enum {
 	fsmLed_TURN_OFF_SIG,
 };
 
-/* Public Functions ----------------------------------------------------------*/
-fsmLed_Fsm * LedCtor( void );
 
+/* Public Functions ----------------------------------------------------------*/
+void LedCtor( fsmLed_Fsm * me);
 
 
 

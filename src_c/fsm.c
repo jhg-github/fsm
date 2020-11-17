@@ -19,3 +19,6 @@ void fsm_Transition(fsm_Fsm *me, fsm_State target) {
     me->state = target;
 }
 
+void fsm_EventSetSignal(fsm_Event *me, fsm_Signal signal){
+	me->signal = signal;
+}
