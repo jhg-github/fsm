@@ -76,6 +76,8 @@ bool queue_Dequeue(queue_t * me, void * elem){
 /* Public Test Functions -------------------------------------------------------*/
 typedef struct queue_test_elem_t{
 	uint8_t a;
+	uint32_t b;
+	uint16_t c;
 } queue_test_elem_t;
 
 static volatile queue_test_elem_t queue_test_elem;
@@ -83,6 +85,9 @@ static volatile bool queue_test_res;
 static queue_t * queue_test_queue;
 
 void queue_test(void){	
+	queue_test_elem.b=0xAAAAAAAA;
+	queue_test_elem.c=0xFFFF;
+	
 	queue_test_queue = queue_Constructor(3, sizeof(queue_test_elem_t));
 	
 	queue_test_res = queue_Dequeue(queue_test_queue, (void *)&queue_test_elem);
