@@ -21,10 +21,20 @@ void LedCtor( fsmLed_Fsm * me, uint32_t evt_buf_n_elem){
 	me->evt_queue = queue_Constructor(evt_buf_n_elem, sizeof(fsmLed_Event));
 }
 
-void Led_Run(void){
+void Led_Init(fsmLed_Fsm * me){
+	fsm_Init(&me->base, 0);
 }
 
-void Led_SendEvent( fsmLed_Fsm * me, fsm_Event * evt ){
+void Led_Run(fsmLed_Fsm * me){
+	bool res;
+	static fsmLed_Event evt;
+	res = queue_Dequeue( me->evt_queue, &evt);
+	if(res){
+		fsm_Dispatch(&me->base, &evt.base);
+	}
+}
+
+void Led_SendEvent( fsmLed_Fsm * me, fsmLed_Event * evt ){
 	queue_Enqueue( me->evt_queue, evt );
 }
 
