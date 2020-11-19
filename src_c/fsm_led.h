@@ -26,6 +26,7 @@ enum {
 
 /* Public Functions ----------------------------------------------------------*/
 void LedCtor( fsmLed_Fsm * me, uint32_t evt_buf_n_elem);
+void Led_Run(void);
 void Led_SendEvent( fsmLed_Fsm * me, fsm_Event * evt );
 
 
