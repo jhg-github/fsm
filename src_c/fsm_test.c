@@ -5,7 +5,7 @@
 #include "assert.h"
 #include "static_allocator.h"
 #include "queue.h"
-
+#include "swtimer.h"
 
 fsmLed_Fsm led_fsm;
 
@@ -25,7 +25,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 void fsm_test(void){
 	LedCtor(&led_fsm,5);
 	Led_Init(&led_fsm);
+//	swtimer_test();
+	salloc_disable();
 	while(1){
+		swtimer_UpdateTimers();
 		Led_Run(&led_fsm);
 	}
 }
