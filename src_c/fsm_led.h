@@ -19,8 +19,7 @@ struct fsmLed_Event {
 
 /* signals used by the Led FSM */
 enum {
-	fsmLed_TURN_ON_SIG = 3,
-	fsmLed_TURN_OFF_SIG = 7,
+	fsmLed_BUTT_PRESSED_SIG
 };
 
 
