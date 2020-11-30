@@ -15,7 +15,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	if(GPIO_Pin == GPIO_PIN_13){
 		fsm_EventSetSignal(&led_evt.base, fsmLed_BUTT_PRESSED_SIG);
 	}
-	Led_SendEvent( &led_fsm, &led_evt  );
+	fsmLed_SendEvent( &led_fsm, &led_evt  );
 }
 
 
@@ -23,12 +23,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
  * Call this from main
  */
 void fsm_test(void){
-	LedCtor(&led_fsm,5);
-	Led_Init(&led_fsm);
+	fsmLed_Ctor(&led_fsm,5);
+	fsmLed_Init(&led_fsm);
 //	swtimer_test();
 	salloc_disable();
 	while(1){
 		swtimer_UpdateTimers();
-		Led_Run(&led_fsm);
+		fsmLed_Run(&led_fsm);
 	}
 }

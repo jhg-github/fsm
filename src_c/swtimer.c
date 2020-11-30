@@ -12,9 +12,10 @@
 struct swtimer_t {
   bool enabled;
 	uint32_t period;
+	bool periodic;
 	uint32_t startTime;
 	swtimer_Callback_t callback;
-	bool periodic;
+	void * callback_data;
 };
 
 
@@ -35,7 +36,7 @@ void swtimer_UpdateTimers(void){
 				} else {
 					swtimer_timersArray[i]->enabled = false;
 				}
-				swtimer_timersArray[i]->callback();
+				swtimer_timersArray[i]->callback(swtimer_timersArray[i]->callback_data);
 			}
 		}
 	}
@@ -52,12 +53,13 @@ swtimer_t * swtimer_Constructor(void){
   return timer;
 }
 
-void swtimer_Start(swtimer_t * me, uint32_t period, swtimer_Callback_t callback, bool periodic){
+void swtimer_Start(swtimer_t * me, uint32_t period, bool periodic, swtimer_Callback_t callback, void * callback_data){
 	ASSERT(me);
 	me->startTime = HAL_GetTick();
 	me->period = period;
-	me->callback = callback;
 	me->periodic = periodic;
+	me->callback = callback;
+	me->callback_data = callback_data;
 	me->enabled = true;
 }
 
@@ -70,7 +72,7 @@ void swtimer_Stop(swtimer_t * me){
 /* Public Test Functions -------------------------------------------------------*/
 static swtimer_t * swtimer_test_timer;
 
-static void swtimer_test_callback(void){
+static void swtimer_test_callback(void * data){
 	static int counter = 0;
 	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 	if(++counter >= 100){
@@ -80,6 +82,6 @@ static void swtimer_test_callback(void){
 
 void swtimer_test(void){
 	swtimer_test_timer = swtimer_Constructor();
-	swtimer_Start(swtimer_test_timer, 100, swtimer_test_callback, true);
+	swtimer_Start(swtimer_test_timer, 100, true, swtimer_test_callback, NULL);
 }
 

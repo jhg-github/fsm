@@ -9,7 +9,9 @@
 
 /* Types ---------------------------------------------------------------------*/
 typedef struct swtimer_t swtimer_t;
-typedef void (*swtimer_Callback_t)(void);
+typedef void (*swtimer_Callback_t)(void *);
+
+typedef struct swtimer_fsm_t swtimer_fsm_t;
 
 
 /* Public Functions ----------------------------------------------------------*/
@@ -17,7 +19,7 @@ typedef void (*swtimer_Callback_t)(void);
 void swtimer_UpdateTimers(void);
 
 swtimer_t * swtimer_Constructor(void);
-void swtimer_Start(swtimer_t * me, uint32_t period, swtimer_Callback_t callback, bool periodic);
+void swtimer_Start(swtimer_t * me, uint32_t period, bool periodic, swtimer_Callback_t callback, void * callback_data);
 void swtimer_Stop(swtimer_t * me);
 
 

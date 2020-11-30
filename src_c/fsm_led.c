@@ -8,24 +8,29 @@
 
 
 /* Function Prototypes -------------------------------------------------------*/
-static void Led_initial(fsmLed_Fsm *me, fsm_Event const *e);
-static void Led_on(fsmLed_Fsm *me, fsm_Event const *e);
-static void Led_off(fsmLed_Fsm *me, fsm_Event const *e);
+static void Led_State_Initial(fsmLed_Fsm *me, fsm_Event const *e);
+static void Led_State_LedOn(fsmLed_Fsm *me, fsm_Event const *e);
+static void Led_State_LedOff(fsmLed_Fsm *me, fsm_Event const *e);
+static void Led_State_BlinkOn(fsmLed_Fsm *me, fsm_Event const *e);
+static void Led_State_BlinkOff(fsmLed_Fsm *me, fsm_Event const *e);
+
 static void SetLedOn(void);
 static void SetLedOff(void);
+static void TimerCallback(void * fsm);
 
 
 /* Public Functions ----------------------------------------------------------*/
-void LedCtor( fsmLed_Fsm * me, uint32_t evt_buf_n_elem){
-	fsm_Ctor(&me->base, (fsm_State) Led_initial);
+void fsmLed_Ctor( fsmLed_Fsm * me, uint32_t evt_buf_n_elem){
+	fsm_Ctor(&me->base, (fsm_State) Led_State_Initial);
 	me->evt_queue = queue_Constructor(evt_buf_n_elem, sizeof(fsmLed_Event));
+	me->blink_timer = swtimer_Constructor();
 }
 
-void Led_Init(fsmLed_Fsm * me){
+void fsmLed_Init(fsmLed_Fsm * me){
 	fsm_Init(&me->base, 0);
 }
 
-void Led_Run(fsmLed_Fsm * me){
+void fsmLed_Run(fsmLed_Fsm * me){
 	bool res;
 	static fsmLed_Event evt;
 	res = queue_Dequeue( me->evt_queue, &evt);
@@ -34,7 +39,7 @@ void Led_Run(fsmLed_Fsm * me){
 	}
 }
 
-void Led_SendEvent( fsmLed_Fsm * me, fsmLed_Event * evt ){
+void fsmLed_SendEvent( fsmLed_Fsm * me, fsmLed_Event * evt ){
 	queue_Enqueue( me->evt_queue, evt );
 }
 
@@ -43,25 +48,54 @@ void Led_SendEvent( fsmLed_Fsm * me, fsmLed_Event * evt ){
 
 /* States Functions ----------------------------------------------------------*/
 
-static void Led_initial(fsmLed_Fsm *me, fsm_Event const *e) {
+static void Led_State_Initial(fsmLed_Fsm *me, fsm_Event const *e) {
     SetLedOn();
-    fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_on);
+    fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOn);
 }
 
-static void Led_on(fsmLed_Fsm *me, fsm_Event const *e) {
+static void Led_State_LedOn(fsmLed_Fsm *me, fsm_Event const *e) {
     switch (e->signal) {
     case fsmLed_BUTT_PRESSED_SIG:
         SetLedOff();
-        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_off);
+				swtimer_Start(me->blink_timer, 100, true, TimerCallback, me);
+        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_BlinkOff);
         break;
     }
 }
 
-static void Led_off(fsmLed_Fsm *me, fsm_Event const *e) {
+static void Led_State_LedOff(fsmLed_Fsm *me, fsm_Event const *e) {
     switch (e->signal) {
     case fsmLed_BUTT_PRESSED_SIG:
         SetLedOn();
-        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_on);
+        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOn);
+        break;
+    }
+}
+
+static void Led_State_BlinkOn(fsmLed_Fsm *me, fsm_Event const *e) {
+    switch (e->signal) {
+    case fsmLed_BUTT_PRESSED_SIG:
+        SetLedOff();
+				swtimer_Stop(me->blink_timer);
+        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOff);
+        break;
+		case fsmLed_TIMEOUT_BLINK:
+        SetLedOff();
+        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_BlinkOff);
+        break;
+    }
+}
+
+static void Led_State_BlinkOff(fsmLed_Fsm *me, fsm_Event const *e) {
+    switch (e->signal) {
+    case fsmLed_BUTT_PRESSED_SIG:
+        SetLedOff();
+				swtimer_Stop(me->blink_timer);
+        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOff);
+        break;
+		case fsmLed_TIMEOUT_BLINK:
+        SetLedOn();
+        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_BlinkOn);
         break;
     }
 }
@@ -74,4 +108,10 @@ static void SetLedOn(void) {
 }
 static void SetLedOff(void) {
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+}
+
+static void TimerCallback(void * data){
+	static fsmLed_Event led_evt;
+	fsm_EventSetSignal(&led_evt.base, fsmLed_TIMEOUT_BLINK);
+	fsmLed_SendEvent( (fsmLed_Fsm*)data, &led_evt );
 }
