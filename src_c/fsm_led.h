@@ -22,7 +22,7 @@ struct fsmLed_Event {
 /* signals used by the Led FSM */
 enum {
 	fsmLed_BUTT_PRESSED_SIG,
-	fsmLed_TIMEOUT_BLINK
+	fsmLed_TIMEOUT_BLINK_SIG
 };
 
 

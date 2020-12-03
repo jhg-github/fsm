@@ -79,7 +79,7 @@ static void Led_State_BlinkOn(fsmLed_Fsm *me, fsm_Event const *e) {
 				swtimer_Stop(me->blink_timer);
         fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOff);
         break;
-		case fsmLed_TIMEOUT_BLINK:
+		case fsmLed_TIMEOUT_BLINK_SIG:
         SetLedOff();
         fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_BlinkOff);
         break;
@@ -93,7 +93,7 @@ static void Led_State_BlinkOff(fsmLed_Fsm *me, fsm_Event const *e) {
 				swtimer_Stop(me->blink_timer);
         fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOff);
         break;
-		case fsmLed_TIMEOUT_BLINK:
+		case fsmLed_TIMEOUT_BLINK_SIG:
         SetLedOn();
         fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_BlinkOn);
         break;
@@ -112,6 +112,6 @@ static void SetLedOff(void) {
 
 static void TimerCallback(void * data){
 	static fsmLed_Event led_evt;
-	fsm_EventSetSignal(&led_evt.base, fsmLed_TIMEOUT_BLINK);
+	fsm_EventSetSignal(&led_evt.base, fsmLed_TIMEOUT_BLINK_SIG);
 	fsmLed_SendEvent( (fsmLed_Fsm*)data, &led_evt );
 }
