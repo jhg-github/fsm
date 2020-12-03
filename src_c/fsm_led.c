@@ -49,14 +49,15 @@ void fsmLed_SendEvent( fsmLed_Fsm * me, fsmLed_Event * evt ){
 /* States Functions ----------------------------------------------------------*/
 
 static void Led_State_Initial(fsmLed_Fsm *me, fsm_Event const *e) {
-    SetLedOn();
     fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOn);
 }
 
 static void Led_State_LedOn(fsmLed_Fsm *me, fsm_Event const *e) {
     switch (e->signal) {
+		case fsmLed_ENTRY_SIG:
+				SetLedOn();
+				break;
     case fsmLed_BUTT_PRESSED_SIG:
-        SetLedOff();
 				swtimer_Start(me->blink_timer, 100, true, TimerCallback, me);
         fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_BlinkOff);
         break;
@@ -65,40 +66,45 @@ static void Led_State_LedOn(fsmLed_Fsm *me, fsm_Event const *e) {
 
 static void Led_State_LedOff(fsmLed_Fsm *me, fsm_Event const *e) {
     switch (e->signal) {
-    case fsmLed_BUTT_PRESSED_SIG:
-        SetLedOn();
-        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOn);
-        break;
-    }
-}
-
-static void Led_State_BlinkOn(fsmLed_Fsm *me, fsm_Event const *e) {
-    switch (e->signal) {
-    case fsmLed_BUTT_PRESSED_SIG:
-        SetLedOff();
+		case fsmLed_ENTRY_SIG:
+				SetLedOff();
 				swtimer_Stop(me->blink_timer);
-        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOff);
-        break;
-		case fsmLed_TIMEOUT_BLINK_SIG:
-        SetLedOff();
-        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_BlinkOff);
+				break;
+    case fsmLed_BUTT_PRESSED_SIG:
+        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOn);
         break;
     }
 }
 
 static void Led_State_BlinkOff(fsmLed_Fsm *me, fsm_Event const *e) {
     switch (e->signal) {
+		case fsmLed_ENTRY_SIG:
+				SetLedOff();
+				break;
     case fsmLed_BUTT_PRESSED_SIG:
-        SetLedOff();
-				swtimer_Stop(me->blink_timer);
         fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOff);
         break;
 		case fsmLed_TIMEOUT_BLINK_SIG:
-        SetLedOn();
         fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_BlinkOn);
         break;
     }
 }
+
+static void Led_State_BlinkOn(fsmLed_Fsm *me, fsm_Event const *e) {
+    switch (e->signal) {
+		case fsmLed_ENTRY_SIG:
+				SetLedOn();
+				break;
+    case fsmLed_BUTT_PRESSED_SIG:
+        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOff);
+        break;
+		case fsmLed_TIMEOUT_BLINK_SIG:
+        fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_BlinkOff);
+        break;
+    }
+}
+
+
 
 
 /* Private Functions ---------------------------------------------------------*/

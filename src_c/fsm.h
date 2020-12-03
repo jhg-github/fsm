@@ -18,6 +18,12 @@ struct fsm_Fsm {
     fsm_State state; /* the current state */
 };
 
+/* signals used by the Led FSM */
+enum {
+	fsm_ENTRY_SIG,
+	fsm_EXIT_SIG
+};
+
 
 /* Public Functions ----------------------------------------------------------*/
 void fsm_Ctor(fsm_Fsm *me, fsm_State init);
