@@ -20,6 +20,7 @@ struct fsm_Fsm {
 
 /* signals used by the Led FSM */
 enum {
+	fsm_INIT_SIG,
 	fsm_ENTRY_SIG,
 	fsm_EXIT_SIG
 };
@@ -27,7 +28,7 @@ enum {
 
 /* Public Functions ----------------------------------------------------------*/
 void fsm_Ctor(fsm_Fsm *me, fsm_State init);
-void fsm_Init(fsm_Fsm *me, fsm_Event const *e);
+void fsm_Init(fsm_Fsm *me);
 void fsm_Dispatch(fsm_Fsm *me, fsm_Event const *e);
 void fsm_Transition(fsm_Fsm *me, fsm_State target);
 

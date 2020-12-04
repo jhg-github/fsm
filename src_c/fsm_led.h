@@ -21,6 +21,7 @@ struct fsmLed_Event {
 
 /* signals used by the Led FSM */
 enum {
+	fsmLed_INIT_SIG = fsm_INIT_SIG,			// must be the same on all fsm
 	fsmLed_ENTRY_SIG = fsm_ENTRY_SIG,		// must be the same on all fsm
 	fsmLed_EXIT_SIG = fsm_EXIT_SIG,			// must be the same on all fsm
 	fsmLed_BUTT_PRESSED_SIG,

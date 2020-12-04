@@ -27,7 +27,7 @@ void fsmLed_Ctor( fsmLed_Fsm * me, uint32_t evt_buf_n_elem){
 }
 
 void fsmLed_Init(fsmLed_Fsm * me){
-	fsm_Init(&me->base, 0);
+	fsm_Init(&me->base);
 }
 
 void fsmLed_Run(fsmLed_Fsm * me){
@@ -48,8 +48,12 @@ void fsmLed_SendEvent( fsmLed_Fsm * me, fsmLed_Event * evt ){
 
 /* States Functions ----------------------------------------------------------*/
 
-static void Led_State_Initial(fsmLed_Fsm *me, fsm_Event const *e) {
-    fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOn);
+static void Led_State_Initial(fsmLed_Fsm *me, fsm_Event const *e) {    
+	  switch (e->signal) {
+		case fsmLed_INIT_SIG:
+				fsm_Transition((fsm_Fsm*) me, (fsm_State) Led_State_LedOn);
+				break;
+    }
 }
 
 static void Led_State_LedOn(fsmLed_Fsm *me, fsm_Event const *e) {
