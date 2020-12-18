@@ -10,13 +10,13 @@
 fsmLed_Fsm led_fsm;
 
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-	static fsmLed_Event led_evt;
-	if(GPIO_Pin == GPIO_PIN_13){
-		fsm_EventSetSignal(&led_evt.base, fsmLed_BUTT_PRESSED_SIG);
-	}
-	fsmLed_SendEvent( &led_fsm, &led_evt  );
-}
+//void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+//	static fsmLed_Event led_evt;
+//	if(GPIO_Pin == GPIO_PIN_13){
+//		fsm_EventSetSignal(&led_evt.base, fsmLed_BUTT_PRESSED_SIG);
+//	}
+//	fsmLed_SendEvent( &led_fsm, &led_evt  );
+//}
 
 
 /**
