@@ -14,11 +14,11 @@ void hsm_Ctor(hsm_Hsm *me, hsm_State init) {
 }
 
 void hsm_Init(hsm_Hsm *me) {
-  me->state(me, &initEvt);
+  me->state.state_func(me, &initEvt);
 }
 
 void hsm_Dispatch(hsm_Hsm *me, hsm_Event const *e) {
-	me->state(me, e);
+	me->state.state_func(me, e);
 }
 
 void hsm_Transition(hsm_Hsm *me, hsm_State target) {
