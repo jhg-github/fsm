@@ -1,5 +1,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "hsm.h"
+#include "main.h"
 
 
 /* Constants -----------------------------------------------------------------*/
@@ -18,7 +19,10 @@ void hsm_Init(hsm_Hsm *me) {
 }
 
 void hsm_Dispatch(hsm_Hsm *me, hsm_Event const *e) {
-	me->state.state_func(me, e);
+	hsm_State next = me->state;
+	do{
+		next = next.state_func(me, e);
+	} while( next.state_func != NULL);
 }
 
 void hsm_Transition(hsm_Hsm *me, hsm_State target) {

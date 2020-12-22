@@ -10,7 +10,6 @@ typedef struct hsm_Hsm hsm_Hsm;
 //typedef void (*hsm_State)(hsm_Hsm*, hsm_Event const*);
 typedef struct hsm_State hsm_State;
 typedef hsm_State (*hsm_StateFunc)(hsm_Hsm*, hsm_Event const*);
-
 struct hsm_State{
 	hsm_StateFunc state_func;
 };
